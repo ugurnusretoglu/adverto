@@ -1,9 +1,15 @@
 package com.ugur.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
@@ -25,7 +31,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
 	
 	@Column(name = "first_name")
 	private String firstName;
@@ -57,8 +63,9 @@ public class User extends BaseEntity {
 	@Column(name = "balance", nullable = true)
 	private BigDecimal balance;
 	
-	@Column(name = "birth_of_date")
-	private Date birtOfDate;
+	@Column(name = "birth_of_date", nullable = true)
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private LocalDate birthOfDate;
 	
 	@Column(name = "profile_image_url,", nullable = true)
 	private String profileImageUrl;
@@ -71,4 +78,9 @@ public class User extends BaseEntity {
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<RefreshToken> refreshTokens = new ArrayList<>();
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of();
+	}
 }
