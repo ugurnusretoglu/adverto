@@ -29,3 +29,8 @@ export interface formType {
         street: string
     }
 }
+
+export interface loginType {
+    username: string,
+    password: string
+}
