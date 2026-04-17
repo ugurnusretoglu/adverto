@@ -1,6 +1,7 @@
 package com.ugur.service.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -43,6 +44,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 		refreshToken.setCreatedAt(new Date());
 		refreshToken.setExpiredDate(new Date(System.currentTimeMillis() + 1000*60*60*6));
 		refreshToken.setRefreshToken(UUID.randomUUID().toString());
+		refreshToken.setRevoked(false);
 		refreshToken.setUser(user);
 		
 		return refreshToken;
@@ -71,12 +73,16 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 	private boolean isValidRefreshToken(Date expiredDate) {
 		return new Date().before(expiredDate);
 	}
-
+	
 	@Override
 	public AuthenticateResponse refreshToken(RefreshTokenRequest input) {
 		Optional<RefreshToken> optRefreshToken = refreshTokenRepository.findByRefreshToken(input.getRefreshToken());
 		if(optRefreshToken.isEmpty()) {
 			throw new BaseException(new ErrorMessage(MessageType.REFRESH_TOKEN_NOT_FOUND, input.getRefreshToken()));
+		}
+		
+		if(optRefreshToken.get().getRevoked()) {
+			throw new BaseException(new ErrorMessage(MessageType.REFRESH_TOKEN_IS_REVOKED, input.getRefreshToken()));
 		}
 		
 		if(!isValidRefreshToken(optRefreshToken.get().getExpiredDate())) {
@@ -88,6 +94,25 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 		RefreshToken savedRefreshToken = refreshTokenRepository.save(createRefreshToken(user));
 		
 		return new AuthenticateResponse(accessToken, savedRefreshToken.getRefreshToken());
+	}
+
+
+	@Override
+	public void logout(String refreshToken) {
+		Optional<RefreshToken> optRefreshToken = refreshTokenRepository.findByRefreshToken(refreshToken);
+		
+		if(optRefreshToken.isEmpty()) {
+			throw new BaseException(new ErrorMessage(MessageType.REFRESH_TOKEN_NOT_FOUND, refreshToken));
+		}
+		
+		List<RefreshToken> activeTokens = refreshTokenRepository.findAllByUserIdAndRevokedFalse(optRefreshToken.get().getUser().getId());
+		
+		for (RefreshToken refToken : activeTokens) {
+			refToken.setRevoked(true);
+		}
+		
+		refreshTokenRepository.saveAll(activeTokens);
+		
 	}
 
 }

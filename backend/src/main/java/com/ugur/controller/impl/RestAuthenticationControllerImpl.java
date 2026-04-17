@@ -33,5 +33,13 @@ public class RestAuthenticationControllerImpl extends RestBaseController impleme
 	public RootEntity<AuthenticateResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest input) {
 		return ok(authenticateService.refreshToken(input));
 	}
+	
+	@PostMapping("/logout")
+	@Override
+	public RootEntity<?> logout(String refreshToken) {
+		authenticateService.logout(refreshToken);
+		return ok("Logged out successfully.");
+	}
+	
 
 }

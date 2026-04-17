@@ -10,4 +10,5 @@ public interface IAuthenticationService {
 	
 	public AuthenticateResponse refreshToken(RefreshTokenRequest input);
 	
+	public void logout(String refreshToken);
 }
