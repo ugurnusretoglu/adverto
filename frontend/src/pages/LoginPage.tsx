@@ -18,16 +18,39 @@ import { IoPerson } from "react-icons/io5";
 import { FaLock } from "react-icons/fa6";
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../redux/appSlice';
+import { toast } from 'react-toastify';
+import { useAuth } from '../contexts/AuthenticationContext';
 
 function LoginPage() {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { login } = useAuth();
 
-    const submit = () => {
-
+    const submit = async (values: any, actions: any) => {
+        dispatch(setLoading(true))
+        try {
+            const result = await login({
+                username: values.username,
+                password: values.password
+            })
+            if (result.success) {
+                toast.success("Login successful");
+                navigate("/");
+            }
+            else {
+                toast.error("Error")
+            }
+        } catch (error) {
+            toast.error("Login failed")
+        } finally {
+            dispatch(setLoading(false))
+        }
     }
 
-    const { values, handleSubmit, handleChange, handleBlur, errors, resetForm, setFieldValue, setFieldTouched, touched } = useFormik<loginType>({
+    const { values, handleSubmit, handleChange, handleBlur, errors, resetForm, touched } = useFormik<loginType>({
         initialValues: {
             username: '',
             password: '',
@@ -59,7 +82,7 @@ function LoginPage() {
     return (
         <div className='login'>
             <Container maxWidth="xs" className='login-card'>
-                <form style={{ width: '100%' }} >
+                <form style={{ width: '100%' }} onSubmit={handleSubmit}>
                     <h2 className='login-title'>Welcome Adverto</h2>
                     <div className='login-info'>
                         <TextField
@@ -142,4 +165,4 @@ function LoginPage() {
     )
 }
 
-export default LoginPage
+export default LoginPage    

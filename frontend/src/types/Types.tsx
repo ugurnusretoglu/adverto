@@ -34,3 +34,15 @@ export interface loginType {
     username: string,
     password: string
 }
+
+export interface logoutType {
+    refreshToken: string
+}
+
+export interface authenticateResponse {
+    payload: {
+        accessToken: string,
+        refreshToken: string;
+    }
+    status: number;
+}
