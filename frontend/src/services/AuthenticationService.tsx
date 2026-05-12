@@ -14,7 +14,7 @@ class AuthenticationService {
 
     logout(payload: logoutType): Promise<void> {
         return new Promise((resolve: any, reject: any) => {
-            axios.post("/logout", payload)
+            axios.post("/auth/logout", payload)
                 .then((response: AxiosResponse<any, any>) => resolve(response.data))
                 .catch((error: any) => reject(error));
         })

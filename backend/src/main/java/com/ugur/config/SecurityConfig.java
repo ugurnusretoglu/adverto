@@ -26,7 +26,6 @@ public class SecurityConfig {
 	public static final String REGISTER = "/register";
 	public static final String AUTHENTICATE = "/authenticate";
 	public static final String REFRESH_TOKEN = "/refreshToken";
-	public static final String LOGOUT = "/logout";
 	
 	@Autowired
 	private AuthenticationProvider authenticationProvider;
@@ -44,7 +43,7 @@ public class SecurityConfig {
 		.exceptionHandling(exception -> exception
 				.authenticationEntryPoint(authEntryPoint))
 		.authorizeHttpRequests(request -> 
-		request.requestMatchers(REGISTER, AUTHENTICATE, REFRESH_TOKEN, LOGOUT).permitAll()
+		request.requestMatchers(REGISTER, AUTHENTICATE, REFRESH_TOKEN, "/auth/logout").permitAll()
 		.anyRequest()
 		.authenticated())
 		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

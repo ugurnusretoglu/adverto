@@ -10,5 +10,5 @@ public interface IRestAuthenticationController {
 	
 	public RootEntity<AuthenticateResponse> refreshToken(RefreshTokenRequest input);
 	
-	public RootEntity<?> logout(String refreshToken);
+	public RootEntity<?> logout(RefreshTokenRequest refreshToken);
 }

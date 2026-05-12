@@ -112,7 +112,6 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 		}
 		
 		refreshTokenRepository.saveAll(activeTokens);
-		
 	}
 
 }

@@ -32,11 +32,11 @@ axiosInstance.interceptors.response.use(
                 const refreshToken = localStorage.getItem('refreshToken');
                 if (refreshToken) {
                     const data = await AuthenticationService.refreshToken({ refreshToken });
-                    localStorage.setItem('accessToken', data.accessToken);
-                    localStorage.setItem('accessToken', data.refreshToken);
+                    localStorage.setItem('accessToken', data.payload.accessToken);
+                    localStorage.setItem('accessToken', data.payload.refreshToken);
 
                     // Retry the original request with new token
-                    originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+                    originalRequest.headers.Authorization = `Bearer ${data.payload.accessToken}`;
                     return axiosInstance(originalRequest);
                 }
             } catch (refreshError) {

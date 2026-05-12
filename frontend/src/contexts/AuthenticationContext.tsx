@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (refreshToken) {
                 await AuthenticationService.logout({ refreshToken });
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Logout error:", error);
         } finally {
             localStorage.removeItem('accessToken');
