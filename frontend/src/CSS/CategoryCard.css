@@ -1,0 +1,35 @@
+.category {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    padding: 60px 0;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 420px;
+    height: 600px;
+    border-radius: 16px !important;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.cardAction {
+    height: 100%;
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 !important;
+}
+
+.cardImage {
+    display: block;
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+}
+
+.cardContent {
+    flex: 1;
+    padding: 20px !important;
+}

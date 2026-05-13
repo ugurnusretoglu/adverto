@@ -66,10 +66,13 @@ export default function PrimarySearchAppBar() {
 
     const firstLetter = user?.username?.charAt(0).toUpperCase() || '?';
 
-
     const handleLogout = async () => {
         await logout();
         navigate('/login');
+    }
+
+    const goToSelectCategory = () => {
+        navigate('/select-category')
     }
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -226,6 +229,7 @@ export default function PrimarySearchAppBar() {
                                     backgroundColor: '#878c8b',
                                 },
                             }}
+                            onClick={goToSelectCategory}
                         >
                             Create Advert
                         </Button>
