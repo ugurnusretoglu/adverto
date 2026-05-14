@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.ugur.enums.AdStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -53,6 +54,6 @@ public class Advert extends BaseEntity {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "advert")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "advert", cascade = CascadeType.ALL)
 	private List<Transaction> transactions = new ArrayList<>();
 }

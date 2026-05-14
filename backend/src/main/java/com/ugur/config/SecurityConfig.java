@@ -43,7 +43,7 @@ public class SecurityConfig {
 		.exceptionHandling(exception -> exception
 				.authenticationEntryPoint(authEntryPoint))
 		.authorizeHttpRequests(request -> 
-		request.requestMatchers(REGISTER, AUTHENTICATE, REFRESH_TOKEN, "/auth/logout").permitAll()
+		request.requestMatchers(REGISTER, AUTHENTICATE, REFRESH_TOKEN, "/auth/logout","/advert/image/upload").permitAll()
 		.anyRequest()
 		.authenticated())
 		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
