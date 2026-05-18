@@ -71,7 +71,7 @@ public class Vehicle extends Advert {
 	private Engine engine;
 	
 	@OneToOne(optional = true)
-	@JoinColumn(name = "fuelConsumption_id")
+	@JoinColumn(name = "fuelConsumption_id", nullable = true)
 	private FuelConsumption fuelConsumption;
 	
 }
