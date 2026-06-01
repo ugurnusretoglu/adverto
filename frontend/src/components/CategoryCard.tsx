@@ -8,6 +8,7 @@ import Container from '@mui/material/Container';
 import Vehicle from '../images/vehicle.jpg';
 import Estate from '../images/estate.jpg';
 import '../CSS/CategoryCard.css';
+import { useNavigate } from 'react-router-dom';
 
 const categories = [
     {
@@ -25,6 +26,13 @@ const categories = [
 ];
 
 function CategoryCard() {
+
+    const navigate = useNavigate();
+
+    const goToVehicle = () => {
+        navigate("/create-vehicle");
+    }
+
     return (
         <Container maxWidth="xl" className="category">
             {categories.map((category) => (
@@ -35,6 +43,7 @@ function CategoryCard() {
                             image={category.image}
                             alt={category.title}
                             className="cardImage"
+                            onClick={goToVehicle}
                         />
 
                         <CardContent className="cardContent">
