@@ -19,7 +19,7 @@ import lombok.Setter;
 public class Land extends Estate {
 	
 	@Column(name = "land_use")
-	private String LandUse;
+	private String landUse;
 	
 	@Column(name = "square_meter")
 	private BigDecimal squareMeter;

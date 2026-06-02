@@ -31,8 +31,8 @@ public class House extends Estate {
 	@Column(name = "floor")
 	private String floor;
 	
-	@Column(name = "totol_floors")
-	private Integer totolFloors;
+	@Column(name = "total_floors")
+	private Integer totalFloors;
 	
 	@Column(name= "heating")
 	private String heating;
