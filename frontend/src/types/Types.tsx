@@ -116,3 +116,75 @@ export interface ApiResponse<T> {
     payload: T;
     status: number;
 }
+
+export interface addressType {
+    country: string;
+    city: string;
+    district: string;
+    street: string;
+}
+
+export interface estateTypeIU extends advertType {
+    dtoAddress: addressType;
+}
+
+export interface houseTypeIU extends estateTypeIU {
+    totalArea: number;
+    netArea: number;
+    rooms?: string;
+    age?: number;
+    floor?: string;
+    totolFloors?: number;
+    heating?: string;
+    bathrooms?: number;
+    kitchen?: string;
+    balcony?: boolean;
+    elevator?: boolean;
+}
+
+export interface landTypeIU extends estateTypeIU {
+    landUse?: string;
+    squareMeter: number;
+    pricePerSquareMeter?: number;
+    blockNo?: string;
+    parcelNo?: string;
+    sheetNo?: string;
+    far?: number;
+    heightLimit?: number;
+}
+
+export interface estateType {
+    id: number;
+    advertNumber: string;
+    advertName: string;
+    price: number;
+    description: string;
+    adStatus: string;
+    dtoAddress: addressType;
+    images: { id: number; url: string }[];
+}
+
+export interface houseType extends estateType {
+    totalArea: number;
+    netArea: number;
+    rooms?: string;
+    age?: number;
+    floor?: string;
+    totolFloors?: number;
+    heating?: string;
+    bathrooms?: number;
+    kitchen?: string;
+    balcony?: boolean;
+    elevator?: boolean;
+}
+
+export interface landType extends estateType {
+    landUse?: string;
+    squareMeter: number;
+    pricePerSquareMeter?: number;
+    blockNo?: string;
+    parcelNo?: string;
+    sheetNo?: string;
+    far?: number;
+    heightLimit?: number;
+}
