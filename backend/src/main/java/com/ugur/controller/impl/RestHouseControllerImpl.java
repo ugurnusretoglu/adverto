@@ -3,6 +3,8 @@ package com.ugur.controller.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -28,6 +30,12 @@ public class RestHouseControllerImpl extends RestBaseController implements IRest
 	public RootEntity<DtoHouse> saveHouse(@RequestPart("house") DtoHouseIU dtoHouseIU, 
 			@RequestPart("images") List<MultipartFile> files) {
 		return ok(iHouseService.saveHouse(dtoHouseIU, files));
+	}
+	
+	@GetMapping("/{id}")
+	@Override
+	public RootEntity<DtoHouse> getHouseById(@PathVariable Long id) {
+		return ok(iHouseService.getHouseById(id));
 	}
 	
 }

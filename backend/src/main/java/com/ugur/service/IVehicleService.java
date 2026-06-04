@@ -16,4 +16,6 @@ public interface IVehicleService {
 	public DtoVehicle saveEngine(Long vehicleId, DtoEngineUI dtoEngineUI);
 	
 	public DtoVehicle saveFuelConsumption(Long vehicleId, DtoFuelConsumptionIU dtoFuelConsumptionIU);
+	
+	public DtoVehicle getVehicleById(Long id);
 }

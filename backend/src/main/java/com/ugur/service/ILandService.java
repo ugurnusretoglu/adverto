@@ -11,4 +11,6 @@ public interface ILandService {
 	
 	public DtoLand saveLand(DtoLandIU dtoLandIU, List<MultipartFile> files);
 	
+	public DtoLand getLandById(Long id);
+	
 }

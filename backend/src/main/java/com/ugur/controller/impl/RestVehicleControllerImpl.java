@@ -3,6 +3,7 @@ package com.ugur.controller.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,5 +47,11 @@ public class RestVehicleControllerImpl extends RestBaseController implements IRe
 	public RootEntity<DtoVehicle> saveFuelConsumption(@PathVariable(name = "id") Long vehicleId, 
 			@RequestBody DtoFuelConsumptionIU dtoFuelConsumptionIU) {
 		return ok(iVehicleService.saveFuelConsumption(vehicleId, dtoFuelConsumptionIU));
+	}
+	
+	@GetMapping("/{id}")
+	@Override
+	public RootEntity<DtoVehicle> getVehicleById(@PathVariable Long id) {
+		return ok(iVehicleService.getVehicleById(id));
 	}
 }

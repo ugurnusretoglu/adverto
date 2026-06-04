@@ -12,6 +12,9 @@ import com.ugur.dto.DtoAddress;
 import com.ugur.dto.DtoImage;
 import com.ugur.dto.DtoLand;
 import com.ugur.dto.DtoLandIU;
+import com.ugur.exception.BaseException;
+import com.ugur.exception.ErrorMessage;
+import com.ugur.exception.MessageType;
 import com.ugur.model.Address;
 import com.ugur.model.Image;
 import com.ugur.model.Land;
@@ -67,6 +70,34 @@ public class LandServiceImpl implements ILandService {
 		}
 		
 		return dtoLand;
+	}
+
+	@Override
+	public DtoLand getLandById(Long id) {
+		DtoLand dtoLand = new DtoLand();
+
+	    Land land = landRepository.findById(id)
+	            .orElseThrow(() -> new BaseException(
+	                new ErrorMessage(MessageType.NO_RECORD_EXIST, id.toString())));
+
+	    BeanUtils.copyProperties(land, dtoLand);
+
+	    if (land.getImages() != null) {
+	        List<DtoImage> dtoImages = land.getImages().stream().map(image -> {
+	            DtoImage dtoImage = new DtoImage();
+	            BeanUtils.copyProperties(image, dtoImage);
+	            return dtoImage;
+	        }).toList();
+	        dtoLand.setImages(dtoImages);
+	    }
+
+	    if (land.getAddress() != null) {
+	        DtoAddress dtoAddress = new DtoAddress();
+	        BeanUtils.copyProperties(land.getAddress(), dtoAddress);
+	        dtoLand.setDtoAddress(dtoAddress);
+	    }
+
+	    return dtoLand;
 	} 
  
 }

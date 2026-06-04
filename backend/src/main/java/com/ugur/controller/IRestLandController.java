@@ -11,4 +11,6 @@ public interface IRestLandController {
 	
 	public RootEntity<DtoLand> saveLand(DtoLandIU dtoLandIU, List<MultipartFile> files);
 	
+	public RootEntity<DtoLand> getLandById(Long id);
+	
 }

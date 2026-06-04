@@ -11,4 +11,5 @@ public interface IHouseService {
 	
 	public DtoHouse saveHouse(DtoHouseIU dtoHouseIU, List<MultipartFile> files);
 	
+	public DtoHouse getHouseById(Long id);
 }

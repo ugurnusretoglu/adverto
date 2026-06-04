@@ -16,4 +16,6 @@ public interface IRestVehicleController {
 	public RootEntity<DtoVehicle> saveEngine(Long vehicleId, DtoEngineUI dtoEngineUI);
 	
 	public RootEntity<DtoVehicle> saveFuelConsumption(Long vehicleId, DtoFuelConsumptionIU dtoFuelConsumptionIU);
+	
+	public RootEntity<DtoVehicle> getVehicleById(Long id);
 }

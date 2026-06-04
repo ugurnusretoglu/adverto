@@ -12,6 +12,9 @@ import com.ugur.dto.DtoAddress;
 import com.ugur.dto.DtoHouse;
 import com.ugur.dto.DtoHouseIU;	
 import com.ugur.dto.DtoImage;
+import com.ugur.exception.BaseException;
+import com.ugur.exception.ErrorMessage;
+import com.ugur.exception.MessageType;
 import com.ugur.model.Address;
 import com.ugur.model.House;
 import com.ugur.model.Image;
@@ -42,7 +45,6 @@ public class HouseServiceImpl implements IHouseService {
 		return house;
 	}
 		
-		
 	@Override
 	public DtoHouse saveHouse(DtoHouseIU dtoHouseIU, List<MultipartFile> files) {			
 		DtoHouse dtoHouse = new DtoHouse();
@@ -68,6 +70,31 @@ public class HouseServiceImpl implements IHouseService {
 		}
 	
 		return dtoHouse;
-	} 
-	
+	}
+
+	@Override
+	public DtoHouse getHouseById(Long id) {
+		DtoHouse dtoHouse = new DtoHouse();
+		
+		House house = houseRepository.findById(id)
+				.orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, id.toString())));
+		BeanUtils.copyProperties(house, dtoHouse);
+		
+		if(house.getImages() != null) {
+			List<DtoImage> dtoImages = house.getImages().stream().map(image -> {
+				DtoImage dtoImage = new DtoImage();
+				BeanUtils.copyProperties(image, dtoImage);
+				return dtoImage;
+			}).toList();
+			dtoHouse.setImages(dtoImages);
+		}
+		
+		if(house.getAddress() != null) {
+			DtoAddress dtoAddress = new DtoAddress();
+			BeanUtils.copyProperties(house.getAddress(), dtoAddress);
+			dtoHouse.setDtoAddress(dtoAddress);
+		}
+		
+		return dtoHouse;
+	} 	
 }

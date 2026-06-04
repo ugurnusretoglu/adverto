@@ -119,4 +119,36 @@ public class VehicleServiceImpl implements IVehicleService {
 		
 		return dtoVehicle;
 	}
+
+	@Override
+	public DtoVehicle getVehicleById(Long id) {
+		DtoVehicle dtoVehicle = new DtoVehicle();
+		
+		Vehicle vehicle = vehicleRepository.findById(id)
+				.orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, id.toString())));
+		
+		BeanUtils.copyProperties(vehicle, dtoVehicle);
+		
+		if(vehicle.getImages() != null) {
+			List<DtoImage> dtoImages = vehicle.getImages().stream().map(image -> {
+				DtoImage dtoImage = new DtoImage();
+				BeanUtils.copyProperties(image, dtoImage);
+				return dtoImage;
+			}).toList();
+			dtoVehicle.setImages(dtoImages);
+		}
+		
+		if(vehicle.getEngine() != null) {
+			DtoEngine dtoEngine = new DtoEngine();
+			BeanUtils.copyProperties(vehicle.getEngine(), dtoEngine);
+			dtoVehicle.setEngine(dtoEngine);
+		}
+		
+		if(vehicle.getFuelConsumption() != null) {
+			DtoFuelConsumption dtoFuelConsumption = new DtoFuelConsumption();
+			BeanUtils.copyProperties(vehicle.getFuelConsumption(), dtoFuelConsumption);
+			dtoVehicle.setFuelConsumption(dtoFuelConsumption);
+		}
+		return dtoVehicle;
+	}
 }

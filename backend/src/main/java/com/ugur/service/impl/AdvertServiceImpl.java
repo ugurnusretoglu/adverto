@@ -15,13 +15,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ugur.dto.DtoAdvert;
 import com.ugur.dto.DtoAdvertIU;
+import com.ugur.dto.DtoAdvertSummary;
 import com.ugur.dto.DtoImage;
 import com.ugur.exception.BaseException;
 import com.ugur.exception.ErrorMessage;
 import com.ugur.exception.MessageType;
 import com.ugur.model.Advert;
+import com.ugur.model.House;
 import com.ugur.model.Image;
+import com.ugur.model.Land;
 import com.ugur.model.User;
+import com.ugur.model.Vehicle;
 import com.ugur.repository.AdvertRepository;
 import com.ugur.repository.ImageRepository;
 import com.ugur.repository.UserRepository;
@@ -98,5 +102,32 @@ public class AdvertServiceImpl implements IAdvertService {
 		dtoAdvert.setImages(dtoImages);
 		
 		return dtoAdvert;
+	}
+
+	@Override
+	public List<DtoAdvertSummary> getAllAdverts() {
+		List<Advert> adverts = advertRepository.findAllWithImages();
+		
+		return adverts.stream().map(advert -> {
+			DtoAdvertSummary summary = new DtoAdvertSummary();
+			BeanUtils.copyProperties(advert, summary);
+			
+			if(advert.getImages() != null && !advert.getImages().isEmpty()) {
+				summary.setCoverImageUrl(advert.getImages().get(0).getUrl());
+			}
+			
+			if(advert instanceof Vehicle) {
+				summary.setAdvertType("VEHICLE");
+			}
+			else if (advert instanceof House) {
+				summary.setAdvertType("HOUSE");
+			}
+			else if (advert instanceof Land) {
+				summary.setAdvertType("LAND");
+			}
+			
+			return summary;
+			
+		}).toList();
 	}	
 }

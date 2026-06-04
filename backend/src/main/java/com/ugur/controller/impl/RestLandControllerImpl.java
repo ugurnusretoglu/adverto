@@ -3,6 +3,8 @@ package com.ugur.controller.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -28,5 +30,11 @@ public class RestLandControllerImpl extends RestBaseController implements IRestL
 	public RootEntity<DtoLand> saveLand(@RequestPart("land") DtoLandIU dtoLandIU, 
 			@RequestPart("images") List<MultipartFile> files) {
 		return ok(iLandService.saveLand(dtoLandIU, files));
+	}
+	
+	@GetMapping("/{id}")
+	@Override
+	public RootEntity<DtoLand> getLandById(@PathVariable Long id) {
+		return ok(iLandService.getLandById(id));
 	}
 }

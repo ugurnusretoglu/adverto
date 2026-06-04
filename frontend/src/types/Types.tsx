@@ -188,3 +188,13 @@ export interface landType extends estateType {
     far?: number;
     heightLimit?: number;
 }
+
+export interface advertSummaryType {
+    id: number;
+    advertName: string;
+    description: string;
+    price: number;
+    adStatus: string;
+    coverImageUrl: string;
+    advertType: "VEHICLE" | "HOUSE" | "LAND";
+}

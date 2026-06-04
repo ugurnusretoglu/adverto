@@ -10,5 +10,7 @@ import com.ugur.dto.DtoHouseIU;
 public interface IRestHouseController {
 
 	public RootEntity<DtoHouse> saveHouse(DtoHouseIU dtoHouseIU, List<MultipartFile> files);
+	
+	public RootEntity<DtoHouse> getHouseById(Long id);
 
 }
