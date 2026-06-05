@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
 import { Grid, Typography, Box, CircularProgress } from "@mui/material";
-import AdvertCard from "./AdvertCard";
-import AdvertService from "../services/AdvertService";
+import AdvertCard from "../components/AdvertCard";
+import FavoriteService from "../services/FavoriteService";
+import { useFavorite } from "../contexts/FavoriteContext";
 import type { advertSummaryType } from "../types/Types";
 
-const AdvertList = () => {
-    const [adverts, setAdverts] = useState<advertSummaryType[]>([]);
+const FavoritesPage = () => {
+    const [favorites, setFavorites] = useState<advertSummaryType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { favoriteIds } = useFavorite();
 
     useEffect(() => {
-        AdvertService.getAllAdverts()
-            .then((response) => setAdverts(response.payload))
-            .catch(() => setError("İlanlar yüklenirken bir hata oluştu."))
+        FavoriteService.getFavorites()
+            .then((response) => setFavorites(response.payload))
+            .catch(() => setError("Favoriler yüklenirken bir hata oluştu."))
             .finally(() => setLoading(false));
     }, []);
+
+    // yıldız kaldırılınca listeden çıkar
+    const filteredFavorites = favorites.filter((f) => favoriteIds.has(f.id));
 
     if (loading) {
         return (
@@ -32,21 +37,23 @@ const AdvertList = () => {
         );
     }
 
-    if (adverts.length === 0) {
+    if (filteredFavorites.length === 0) {
         return (
             <Box sx={{ textAlign: "center", mt: 6 }}>
-                <Typography color="text.secondary">Henüz ilan bulunmamaktadır.</Typography>
+                <Typography color="text.secondary">
+                    Henüz yıldızladığınız bir ilan bulunmamaktadır.
+                </Typography>
             </Box>
         );
     }
 
     return (
         <Box sx={{ px: 4, py: 3 }}>
-            <Typography variant="h5" sx={{ fontWeight: '500', mb: 3 }}>
-                İlanlar
+            <Typography variant="h5" sx={{ fontWeight: '500', mb: 3 }} >
+                Yıldızlanan İlanlar
             </Typography>
             <Grid container spacing={3}>
-                {adverts.map((advert) => (
+                {filteredFavorites.map((advert) => (
                     <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={advert.id}>
                         <AdvertCard advert={advert} />
                     </Grid>
@@ -56,4 +63,4 @@ const AdvertList = () => {
     );
 };
 
-export default AdvertList;
+export default FavoritesPage;

@@ -1,10 +1,13 @@
-import { Card, CardActionArea, Box, Typography, Chip } from "@mui/material";
+import { Card, CardActionArea, Box, Typography, Chip, IconButton } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import HomeIcon from "@mui/icons-material/Home";
 import LandscapeIcon from "@mui/icons-material/Landscape";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useNavigate } from "react-router-dom";
 import type { advertSummaryType } from "../types/Types";
+import { useFavorite } from "../contexts/FavoriteContext";
 
 interface Props {
     advert: advertSummaryType;
@@ -38,11 +41,27 @@ const normalizeAdvertType = (type: string | null | undefined): AdvertType => {
 
 const AdvertCard = ({ advert }: Props) => {
     const navigate = useNavigate();
-    const advertType = normalizeAdvertType(advert.advertType); // normalize edilmiş değeri sakla
+    const { favoriteIds, addFavorite, removeFavorite } = useFavorite();
+
+    const advertType = normalizeAdvertType(advert.advertType);
     const badge = badgeConfig[advertType];
+    const starred = favoriteIds.has(advert.id);
 
     const handleClick = () => {
-        navigate(`/advert/${advertType.toLowerCase()}/${advert.id}`); // artık null olmaz
+        navigate(`/advert/${advertType.toLowerCase()}/${advert.id}`);
+    };
+
+    const handleStar = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        try {
+            if (starred) {
+                await removeFavorite(advert.id);
+            } else {
+                await addFavorite(advert.id);
+            }
+        } catch (error) {
+            console.error("Favori işlemi başarısız:", error);
+        }
     };
 
     return (
@@ -63,32 +82,36 @@ const AdvertCard = ({ advert }: Props) => {
             <CardActionArea onClick={handleClick} sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "stretch" }}>
 
                 {/* Resim */}
-                <Box
-                    sx={{
-                        width: "100%",
-                        aspectRatio: "4/3",
-                        overflow: "hidden",
-                        bgcolor: "grey.100",
-                        flexShrink: 0,
-                    }}
-                >
+                <Box sx={{ width: "100%", aspectRatio: "4/3", overflow: "hidden", bgcolor: "grey.100", flexShrink: 0, position: "relative" }}>
                     <Box
                         component="img"
                         src={advert.coverImageUrl || "/placeholder.jpg"}
                         alt={advert.advertName}
-                        sx={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            display: "block",
-                        }}
+                        sx={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                     />
+                    <IconButton
+                        onClick={handleStar}
+                        size="small"
+                        sx={{
+                            position: "absolute",
+                            top: 8,
+                            right: 8,
+                            bgcolor: "rgba(255,255,255,0.85)",
+                            backdropFilter: "blur(4px)",
+                            "&:hover": { bgcolor: "rgba(255,255,255,1)" },
+                            width: 30,
+                            height: 30,
+                        }}
+                    >
+                        {starred
+                            ? <StarIcon sx={{ fontSize: 18, color: "#EF9F27" }} />
+                            : <StarBorderIcon sx={{ fontSize: 18, color: "text.secondary" }} />
+                        }
+                    </IconButton>
                 </Box>
 
                 {/* İçerik */}
                 <Box sx={{ p: "12px 14px", flexGrow: 1, display: "flex", flexDirection: "column" }}>
-
-                    {/* Badge */}
                     <Chip
                         icon={badge.icon}
                         label={badge.label}
@@ -104,16 +127,10 @@ const AdvertCard = ({ advert }: Props) => {
                         }}
                     />
 
-                    {/* Başlık */}
-                    <Typography
-                        variant="body2"
-                        noWrap
-                        sx={{ mb: 0.5, color: "text.primary", fontWeight: '500' }}
-                    >
+                    <Typography variant="body2" noWrap sx={{ mb: 0.5, color: "text.primary", fontWeight: '500' }}>
                         {advert.advertName}
                     </Typography>
 
-                    {/* Açıklama */}
                     <Typography
                         variant="caption"
                         color="text.secondary"
@@ -130,7 +147,6 @@ const AdvertCard = ({ advert }: Props) => {
                         {advert.description}
                     </Typography>
 
-                    {/* Footer */}
                     <Box
                         sx={{
                             display: "flex",

@@ -63,7 +63,7 @@ public class FavoriteAdvertServiceImpl implements IFavoriteAdvertService {
 	@Override
 	public List<DtoAdvertSummary> getFavorites() {
 		User user = advertServiceImpl.getCurrentUser();
-		List<FavoriteAdvert> favorites = favoriteAdvertRepository.findbyUser(user);
+		List<FavoriteAdvert> favorites = favoriteAdvertRepository.findByUser(user);
 		
 		return favorites.stream().map(fav -> {
             Advert advert = fav.getAdvert();

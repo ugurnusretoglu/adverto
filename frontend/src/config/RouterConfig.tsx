@@ -6,6 +6,7 @@ import SelectCategoryPage from '../pages/SelectCategoryPage';
 import CreateVehiclePage from '../pages/CreateVehiclePage';
 import CreateEstatePage from '../pages/CreateEstatePage';
 import AdvertDetailPage from '../pages/AdvertDetailPage';
+import FavoritesPage from '../pages/FavoritesPage';
 
 function RouterConfig() {
     return (
@@ -17,6 +18,7 @@ function RouterConfig() {
             <Route path="/create-vehicle" element={<CreateVehiclePage />} />
             <Route path="/create-estate" element={<CreateEstatePage />} />
             <Route path="/advert/:type/:id" element={<AdvertDetailPage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
         </Routes>
     )
 }

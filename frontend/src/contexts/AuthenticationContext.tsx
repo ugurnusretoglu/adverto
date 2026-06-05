@@ -12,19 +12,25 @@ type AuthContextType = {
     login: (credentials: loginType) => Promise<{ success: boolean; message?: string }>;
     logout: () => Promise<void>;
     loading: boolean;
+    onLoginSuccess?: () => void;
+    onLogout?: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
-    }
+    if (!context) throw new Error('useAuth must be used within an AuthProvider');
     return context;
 };
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+type AuthProviderProps = {
+    children: React.ReactNode;
+    onLoginSuccess?: () => void;
+    onLogout?: () => void;
+}
+
+export const AuthProvider = ({ children, onLoginSuccess, onLogout }: AuthProviderProps) => {
     const [user, setUser] = useState<UserType | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -41,14 +47,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const payload = JSON.parse(atob(token.split('.')[1]));
             const isExpired = payload.exp * 1000 < Date.now();
-
             if (isExpired) {
                 localStorage.removeItem('accessToken');
                 localStorage.removeItem('refreshToken');
             } else {
                 setUser({ username: payload.sub, token });
             }
-        } catch (error) {
+        } catch {
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
         } finally {
@@ -65,11 +70,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             const payload = JSON.parse(atob(data.payload.accessToken.split('.')[1]));
             setUser({ username: payload.sub, token: data.payload.accessToken });
 
+            onLoginSuccess?.();
+
             return { success: true };
         } catch (error: any) {
-            console.log("hata:", error.response?.data);
-            console.log("status:", error.response?.status);
-            console.log("gönderilen data:", currentUser);
             return {
                 success: false,
                 message: error.response?.data?.message || 'Login failed'
@@ -89,18 +93,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             setUser(null);
+            onLogout?.();
         }
     };
 
-    const value = {
-        user,
-        login,
-        logout,
-        loading
-    };
-
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider value={{ user, login, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );

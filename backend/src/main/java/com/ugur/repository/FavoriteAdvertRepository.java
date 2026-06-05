@@ -15,8 +15,7 @@ public interface FavoriteAdvertRepository extends JpaRepository<FavoriteAdvert, 
 	
 	Optional<FavoriteAdvert> findByUserAndAdvert(User user, Advert advert);
 	
-	List<FavoriteAdvert> findbyUser(User user);
+	List<FavoriteAdvert> findByUser(User user);
 	
 	boolean existsByUserAndAdvert(User user, Advert advert);
-	
 }

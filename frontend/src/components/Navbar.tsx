@@ -12,26 +12,23 @@ import SearchIcon from '@mui/icons-material/Search';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import AdvertoLogo from '../images/adverto-logo.png'
+import AdvertoLogo from '../images/adverto-logo.png';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthenticationContext';
 import HotelClassIcon from '@mui/icons-material/HotelClass';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-
+import { useFavorite } from '../contexts/FavoriteContext';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
-
     width: '100%',
     maxWidth: '400px',
-
     '&:hover': {
         backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
-
     marginRight: theme.spacing(2),
     marginLeft: theme.spacing(3),
 }));
@@ -50,7 +47,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
         padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
         width: '100%',
@@ -63,21 +59,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar() {
     const { logout, user } = useAuth();
     const navigate = useNavigate();
+    const { favoriteCount } = useFavorite();
 
     const firstLetter = user?.username?.charAt(0).toUpperCase() || '?';
 
     const handleLogout = async () => {
         await logout();
         navigate('/login');
-    }
+    };
 
     const goToSelectCategory = () => {
-        navigate('/select-category')
-    }
+        navigate('/select-category');
+    };
+
+    const goToFavorites = () => {
+        navigate('/favorites');
+    };
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-        React.useState<null | HTMLElement>(null);
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -103,16 +103,10 @@ export default function PrimarySearchAppBar() {
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             id={menuId}
             keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
@@ -125,16 +119,10 @@ export default function PrimarySearchAppBar() {
     const renderMobileMenu = (
         <Menu
             anchorEl={mobileMoreAnchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             id={mobileMenuId}
             keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
@@ -143,17 +131,13 @@ export default function PrimarySearchAppBar() {
                     Create Advert
                 </Button>
             </MenuItem>
-            <MenuItem>
-                <IconButton
-                    size="large"
-                    aria-label="show 1 favorite products"
-                    color="inherit"
-                >
-                    <Badge badgeContent={17} color="error">
+            <MenuItem onClick={goToFavorites}>
+                <IconButton size="large" aria-label="show favorites" color="inherit">
+                    <Badge badgeContent={favoriteCount} color="error">
                         <HotelClassIcon />
                     </Badge>
                 </IconButton>
-                <p>Products</p>
+                <p>Favorites</p>
             </MenuItem>
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
@@ -184,11 +168,7 @@ export default function PrimarySearchAppBar() {
                         <img
                             src={AdvertoLogo}
                             alt="logo"
-                            style={{
-                                height: '150px',
-                                width: 'auto',
-                                objectFit: 'contain',
-                            }}
+                            style={{ height: '150px', width: 'auto', objectFit: 'contain' }}
                         />
                     </Box>
 
@@ -203,7 +183,9 @@ export default function PrimarySearchAppBar() {
                             />
                         </Search>
                     </Box>
+
                     <Box sx={{ flexGrow: 1 }} />
+
                     <Box sx={{
                         display: { xs: 'none', md: 'flex' },
                         alignItems: 'center',
@@ -224,24 +206,24 @@ export default function PrimarySearchAppBar() {
                                 fontWeight: 600,
                                 display: 'flex',
                                 alignItems: 'center',
-
-                                '&:hover': {
-                                    backgroundColor: '#878c8b',
-                                },
+                                '&:hover': { backgroundColor: '#878c8b' },
                             }}
                             onClick={goToSelectCategory}
                         >
                             Create Advert
                         </Button>
+
                         <IconButton
                             size="large"
-                            aria-label="show 1 favorite products"
+                            aria-label="show favorites"
                             color="inherit"
+                            onClick={goToFavorites}
                         >
-                            <Badge badgeContent={1} color="secondary">
+                            <Badge badgeContent={favoriteCount} color="error">
                                 <HotelClassIcon />
                             </Badge>
                         </IconButton>
+
                         <IconButton
                             size="large"
                             edge="end"
@@ -256,6 +238,7 @@ export default function PrimarySearchAppBar() {
                             </Stack>
                         </IconButton>
                     </Box>
+
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"
